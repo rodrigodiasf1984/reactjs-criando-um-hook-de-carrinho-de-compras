@@ -42,13 +42,14 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
       }
       if(!productExistInCart){
         const {data:product} = await api.get<Product>(`products/${productId}`);
-       setCart([...cart, {...product, amount: 1}]); 
+       setCart([...cart, {...product, amount}]); 
        localStorage.setItem('@RocketShoes:cart', JSON.stringify([...cart, {...product, amount: 1}]));
         
       }else{
         const updatedCart = cart.map(p=> (
           p.id === productId ? {...p, amount: p.amount+1 } : p
           )); 
+          console.log(updatedCart, 'CART')
           setCart(updatedCart);
           localStorage.setItem('@RocketShoes:cart', JSON.stringify(updatedCart))
       }
@@ -59,7 +60,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
 
   const removeProduct = (productId: number) => {
     try {
-      const productExistInCart = cart.find(p=>p.id === productId);
+      const productExistInCart = cart.find(p=>p.id === productId);     
       if(!productExistInCart) {
         toast.error('Produto não se encontra no carrinho')
         return;
@@ -87,7 +88,7 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         return;
       }
       const updatedCart = cart.map(p=> (
-        p.id === productId ? {...p, amount: amount +1 } : p
+        p.id === productId ? {...p, amount: amount } : p
         )); 
       setCart(updatedCart);
       localStorage.setItem('@RocketShoes:cart', JSON.stringify(updatedCart))
